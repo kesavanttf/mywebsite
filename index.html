@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Line Donors</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="#" class="logo" onclick="showPage('homePage')">
+                    Life Line <span>Donors</span>
+                </a>
+            </li>
+            <li class="nav-links">
+                <a href="#" onclick="showPage('homePage')">Home</a>
+                <a href="#" onclick="showPage('registrationPage')">Register</a>
+                <a href="#" onclick="showPage('donorListPage'); fetchDonorData();">Admin</a>
+                <a href="#" onclick="showPage('bloodNeedersPage'); fetchBloodNeeders();">Blood Needers</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Home Page -->
+    <section id="homePage" class="page active">
+        <div class="home-container">
+            <h1>Welcome to Life Line Donors</h1>
+            <p>Your donation can save lives. Join us in making a difference.</p>
+            <div class="home-buttons">
+                <button onclick="showPage('registrationPage')">Become a Donor</button>
+                <button onclick="showPage('donorListPage'); fetchDonorData();">Admin</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Page -->
+    <section id="registrationPage" class="page" style="display: none;">
+        <h2>Donor Registration</h2>
+        <form id="registrationForm" action="register.php" method="POST">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+
+            <div class="form-group">
+                <label>Gender:</label>
+                <input type="radio" name="gender" value="m" required> Male
+                <input type="radio" name="gender" value="f"> Female
+                <input type="radio" name="gender" value="o"> Others
+            </div>
+
+            <div class="form-group">
+                <label for="bloodType">Blood Type:</label>
+                <select name="bloodType" id="bloodType" required>
+                    <option value="">Select</option>
+                    <option value="A+">A+</option>
+                    <option value="B+">B+</option>
+                    <option value="O+">O+</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="A-">A-</option>
+                    <option value="B-">B-</option>
+                    <option value="O-">O-</option>
+                    <option value="A2+">A2+</option>
+                    <option value="A2-">A2-</option>
+                    <option value="A2B+">A2B+</option>
+                    <option value="A2B-">A2B-</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="number">Phone:</label>
+                <input type="text" id="number" name="number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastDonation">Last Donation Date:</label>
+                <input type="date" id="lastDonation" name="lastDonation">
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <select id="location" name="location" required>
+                    <option value="">Select District</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Madurai">Madurai</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="aadharCardNumber">Aadhar Card Number:</label>
+                <input type="text" id="aadharCardNumber" name="aadharCardNumber" required 
+                    pattern="[0-9]{12}" title="Aadhar card number must be exactly 12 digits">
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+    </section>
+
+    <!-- Blood Needers Page -->
+    <section id="bloodNeedersPage" class="page" style="display: none;">
+        <h2>Blood Needers</h2>
+        <form id="filterForm" onsubmit="filterBloodNeeders(event)">
+            <div class="form-group">
+                <label for="filterLocation">Location:</label>
+                <select id="filterLocation" required>
+                    <option value="">Select District</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Madurai">Madurai</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="filterBloodType">Blood Type:</label>
+                <select id="filterBloodType" required>
+                    <option value="">Select</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+            </div>
+            <button type="submit">Filter</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Needer's Name</th>
+                    <th>Location</th>
+                    <th>Blood Type</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody id="bloodNeedersTableBody">
+                <!-- Data will be populated dynamically -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Donor List Page -->
+    <section id="donorListPage" class="page" style="display: none;">
+        <h2>Donor List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>DOB</th>
+                    <th>Gender</th>
+                    <th>Blood Type</th>
+                    <th>Phone</th>
+                    <th>Last Donation</th>
+                    <th>Location</th>
+                    <th>Aadhar Card Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="donorTableBody"></tbody>
+        </table>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
